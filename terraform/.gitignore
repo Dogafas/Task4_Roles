@@ -1,0 +1,33 @@
+# Ignore Terraform variable files
+terraform.tfvars
+*.json
+*.key
+*.pem
+
+
+# Local .terraform directories
+**/.terraform/*
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+    
+# Crash logs
+crash.log
+crash.*.log
+
+# Exclude override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Sensitive variable files
+*.auto.tfvars
+!example.auto.tfvars
+terraform.tfvars
+
+# Ignore local CLI config
+.terraformrc
+terraform.rc
+.terraform.lock.hcl

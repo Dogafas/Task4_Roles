@@ -1,0 +1,11 @@
+[Unit]
+Description=Vector Service
+After=network.target
+
+[Service]
+# Используем переменную пути к бинарнику, которую мы определили в vars.yml
+ExecStart={{ vector_bin_path }} --config {{ vector_config_dir }}/vector.yml
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

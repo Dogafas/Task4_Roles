@@ -1,0 +1,29 @@
+cloud_id                 = "your-cloud-id"
+folder_id                = "your-folder-id"
+service_account_key_file = "/path/to/key.json"
+public_key_path          = "~/.ssh/id_ed25519.pub"
+private_key_path         = "~/.ssh/id_ed25519"
+
+each_vm = [
+  {
+    name        = "clickhouse-01"
+    platform_id = "standard-v3"
+    cores       = 2
+    memory      = 4
+    disk_size   = 10
+  },
+  {
+    name        = "vector-01"
+    platform_id = "standard-v3"
+    cores       = 2
+    memory      = 2
+    disk_size   = 10
+  },
+  {
+    name        = "lighthouse-01"
+    platform_id = "standard-v3"
+    cores       = 2
+    memory      = 2
+    disk_size   = 10
+  }
+]

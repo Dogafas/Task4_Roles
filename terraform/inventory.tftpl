@@ -1,0 +1,23 @@
+clickhouse:
+  hosts:
+    clickhouse-01:
+      ansible_host: ${vms["clickhouse-01"].network_interface[0].nat_ip_address}
+
+vector:
+  hosts:
+    vector-01:
+      ansible_host: ${vms["vector-01"].network_interface[0].nat_ip_address}
+
+lighthouse:
+  hosts:
+    lighthouse-01:
+      ansible_host: ${vms["lighthouse-01"].network_interface[0].nat_ip_address}
+
+all:
+  vars:
+    ansible_user: yc-user
+    ansible_ssh_private_key_file: ${private_key_path}
+    ansible_become: true
+    ansible_become_method: sudo
+    ansible_become_password: ""
+    ansible_become_flags: "-n"

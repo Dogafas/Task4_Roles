@@ -1,0 +1,10 @@
+---
+clickhouse_version: "22.3.3.44"
+
+clickhouse_packages:
+  - "clickhouse-client={{ clickhouse_version }}"
+  - "clickhouse-server={{ clickhouse_version }}"
+  - "clickhouse-common-static={{ clickhouse_version }}"
+
+clickhouse_keyring_path: /usr/share/keyrings/clickhouse-keyring.gpg
+clickhouse_repo_path: /etc/apt/sources.list.d/clickhouse.list

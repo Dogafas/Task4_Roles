@@ -1,0 +1,141 @@
+---
+- name: Install ClickHouse
+  hosts: clickhouse
+  become: true
+  tasks:
+    - name: Install prerequisite packages for ClickHouse
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+        state: present
+        update_cache: yes
+
+    - name: Download ClickHouse GPG key
+      shell: |
+        set -e
+        curl -fsSL 'https://packages.clickhouse.com/rpm/lts/repodata/repomd.xml.key' \
+          | gpg --dearmor -o "{{ clickhouse_keyring_path }}"
+        chmod 0644 "{{ clickhouse_keyring_path }}"
+      args:
+        creates: "{{ clickhouse_keyring_path }}"
+
+    - name: Add ClickHouse APT repository
+      copy:
+        dest: "{{ clickhouse_repo_path }}"
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          deb [signed-by={{ clickhouse_keyring_path }} arch=amd64] https://packages.clickhouse.com/deb stable main
+
+    - name: Update APT cache
+      apt:
+        update_cache: yes
+
+    - name: Install ClickHouse packages
+      apt:
+        name: "{{ clickhouse_packages }}"
+        state: present
+        update_cache: yes
+
+    - name: Ensure ClickHouse server is running
+      service:
+        name: clickhouse-server
+        state: started
+        enabled: true
+
+- name: Install Lighthouse
+  hosts: lighthouse
+  become: true
+  tasks:
+    - name: Install nginx and unzip
+      apt:
+        name:
+          - nginx
+          - unzip
+        state: present
+        update_cache: yes
+
+    - name: Download Lighthouse archive
+      get_url:
+        url: "{{ lighthouse_repo_url }}"
+        dest: "/tmp/lighthouse.zip"
+
+    - name: Unarchive Lighthouse
+      unarchive:
+        src: "/tmp/lighthouse.zip"
+        dest: "{{ lighthouse_install_dir }}"
+        remote_src: yes
+        # extra_opts: [--strip-components=1]
+
+    - name: Configure nginx for Lighthouse
+      template:
+        src: templates/lighthouse.conf.j2
+        dest: "{{ lighthouse_nginx_conf }}"
+        mode: "0644"
+      notify: Restart nginx
+
+    - name: Remove default nginx config
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Ensure nginx is running
+      service:
+        name: nginx
+        state: started
+        enabled: true
+
+  handlers:
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
+
+- name: Install Vector
+  hosts: vector
+  become: true
+  
+  tasks:
+    - name: Create extraction directory
+      file:
+        path: "/opt/vector"
+        state: directory
+        mode: "0755"
+
+    - name: Download and Extract Vector
+      unarchive:
+        src: "https://github.com/vectordotdev/vector/releases/download/v{{ vector_version }}/vector-{{ vector_version }}-x86_64-unknown-linux-gnu.tar.gz"
+        dest: "/opt/vector"
+        remote_src: yes
+        extra_opts: [--strip-components=2]
+
+    - name: Move Vector binary to bin
+      copy:
+        src: "/opt/vector/bin/vector"
+        dest: "/usr/local/bin/vector"
+        mode: "0755"
+        remote_src: true
+
+    - name: Create Vector systemd unit
+      template:
+        src: templates/vector.service.j2
+        dest: /etc/systemd/system/vector.service
+        mode: "0644"
+      notify: Restart vector
+
+    - name: Enable and start Vector
+      systemd:
+        name: vector
+        state: started
+        enabled: true
+
+  handlers:
+    - name: Restart vector
+      systemd:
+        name: vector
+        state: restarted
+        daemon_reload: yes

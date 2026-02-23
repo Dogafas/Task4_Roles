@@ -1,0 +1,14 @@
+---
+# playbook/group_vars/vector/vars.yml
+vector_version: "0.30.0"
+
+# Формирование URL на основе версии
+vector_archive_url: "https://github.com/vectordotdev/vector/releases/download/v{{ vector_version }}/vector-{{ vector_version }}-x86_64-unknown-linux-gnu.tar.gz"
+
+# Пути для работы плейбука
+vector_archive_path: "/tmp/vector.tar.gz"
+vector_extract_path: "/opt/vector"
+vector_bin_path: "/usr/local/bin/vector"
+
+# Путь к конфигу (для шаблона vector.yml.j2)
+vector_config_dir: "/etc/vector"
