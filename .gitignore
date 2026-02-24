@@ -1,0 +1,50 @@
+# -----------------------------
+# Terraform
+# -----------------------------
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
+*.tfvars.json
+crash.log
+override.tf
+override.tf.json
+*.plan
+
+# -----------------------------
+# Ansible
+# -----------------------------
+# Скачанные роли — НЕ коммитим
+playbook/roles/
+
+# Логи и временные файлы
+*.retry
+
+# Локальные инвентори, если генерируются
+playbook/inventory/*.yml
+
+# -----------------------------
+# Python (если используешь ansible-lint, molecule и т.п.)
+# -----------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pytest_cache/
+.cache/
+
+# -----------------------------
+# OS / Editor junk
+# -----------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# -----------------------------
+# Misc
+# -----------------------------
+*.bak
+*.tmp
