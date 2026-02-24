@@ -1,6 +1,0 @@
----
-# playbook/group_vars/lighthouse/vars.yml
-lighthouse_repo_url: "https://github.com/VKCOM/lighthouse/archive/refs/heads/master.zip"
-lighthouse_install_dir: "/usr/share/nginx/html"
-lighthouse_web_root: "/usr/share/nginx/html/lighthouse-master"
-lighthouse_nginx_conf: "/etc/nginx/conf.d/lighthouse.conf"
