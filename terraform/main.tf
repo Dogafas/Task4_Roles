@@ -81,13 +81,18 @@ resource "null_resource" "ansible_provisioner" {
   }
 
   provisioner "local-exec" {
-    # Флаг ANSIBLE_HOST_KEY_CHECKING=False избавляет от ручного подтверждения SSH ключа
     command = <<EOT
-      sleep 60;
-      export ANSIBLE_HOST_KEY_CHECKING=False;
-      ansible-playbook -i ${local_file.ansible_inventory.filename} ${path.module}/../playbook/site.yml
-    EOT
+    sleep 60;
+    export ANSIBLE_HOST_KEY_CHECKING=False;
+
+    # Устанавливаем роли из GitHub
+    ansible-galaxy install -r ${path.module}/../playbook/requirements.yml -p ${path.module}/../playbook/roles
+
+    # Запускаем playbook
+    ansible-playbook -i ${local_file.ansible_inventory.filename} ${path.module}/../playbook/site.yml
+  EOT
   }
+
 
   depends_on = [yandex_compute_instance.vm, local_file.ansible_inventory]
 }

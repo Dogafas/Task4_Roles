@@ -1,0 +1,10 @@
+- src: https://github.com/Dogafas/vector-role
+  scm: git
+  version: "v1.0.2"
+  name: vector-role
+
+- src: https://github.com/Dogafas/lighthouse-role
+  scm: git
+  version: "v1.0.1"
+  name: lighthouse-role
+
